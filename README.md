@@ -33,6 +33,25 @@ work without an app group.
 
 ---
 
+## Supervision status (iOS 27.0)
+
+**Apple's built-in supervision is not implemented in Gester.** The in-app
+"This iPhone is provided specifically for testing" banner and "Managed by
+group" label are cosmetic and do not enroll the device in MDM or mark it as
+supervised.
+
+Nugget's supervision workflow modifies
+`Library/ConfigurationProfiles/CloudConfigurationDetails.plist` during its
+restore / Skip Setup process. Gester's existing MCM sandbox escape has not
+been demonstrated to write this protected configuration on an already-set-up
+iOS 27.0 device. Editing MobileGestalt alone does not establish supervision.
+
+The Settings screen labels this feature as **not implemented** rather than
+implying that the cosmetic test-device banner changes system state. Do not use
+the banner as evidence that the device is supervised.
+
+---
+
 ## 1. What this is
 
 KAMUI is a **partial sandbox escape**: a normally sandboxed app obtains a
