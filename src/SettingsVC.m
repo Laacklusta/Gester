@@ -172,6 +172,15 @@
     [self.navigationController pushViewController:[[LogVC alloc] init] animated:YES];
 }
 
+- (void)showSupervisionInfo {
+    NSString *message = NSLocalizedString(
+        @"Gester does not currently enable Apple's built-in supervision. The test-device banner and Managed by group label are cosmetic and affect Gester only.\n\n"
+         @"Nugget's supervision method writes CloudConfigurationDetails.plist as part of its restore / Skip Setup workflow. Gester's current sandbox escape has not been verified to write that protected configuration on iOS 27.0, and changing MobileGestalt alone is not sufficient.\n\n"
+         @"No changes have been made to your device-management state. Do not treat this app as supervised unless iOS or an authorized management service confirms it.",
+        nil);
+    BQAlert(self, NSLocalizedString(@"Supervision — not enabled", nil), message);
+}
+
 #pragma mark - Table
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView { return 5; }
@@ -181,7 +190,7 @@
         case 0: return 4;
         case 1: return 1;
         case 2: return 2;
-        case 3: return 3;
+        case 3: return 4;
         case 4: return 4;
     }
     return 0;
@@ -275,6 +284,15 @@
             sw.on = [self bannerEnabled];
             return cell;
         }
+        if (indexPath.row == 3) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"supervisioninfo"];
+            if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"supervisioninfo"];
+            cell.textLabel.text = NSLocalizedString(@"Apple supervision", nil);
+            cell.detailTextLabel.text = NSLocalizedString(@"Not implemented — see details", nil);
+            cell.detailTextLabel.textColor = [UIColor secondaryLabelColor];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            return cell;
+        }
         if (indexPath.row == 2) {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"class2switch"];
             if (!cell) cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"class2switch"];
@@ -329,6 +347,7 @@
     else if (indexPath.section == 2 && indexPath.row == 0) [self respring];
     else if (indexPath.section == 2 && indexPath.row == 1) [self openLog];
     else if (indexPath.section == 3 && indexPath.row == 1) [self editManagedGroup];
+    else if (indexPath.section == 3 && indexPath.row == 3) [self showSupervisionInfo];
     else if (indexPath.section == 4 && indexPath.row == 3) [self chooseLanguage];
 }
 
